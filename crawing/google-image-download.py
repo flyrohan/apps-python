@@ -1,12 +1,8 @@
 import os
-from requests import get
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 import urllib, urllib.request
 from time import sleep
-from shutil import copyfileobj
-from base64 import b64decode
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
