@@ -6,6 +6,7 @@ from time import sleep
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+import tkinter.filedialog as filedialog
 
 # origin https://coder38611.tistory.com/6
 
@@ -20,7 +21,7 @@ class StatusBar():
         self.window = window        
         self.var = StringVar()
         self.entry = Entry(window, state='readonly', readonlybackground="#dfdfdf", fg='black')
-        self.entry.grid(row=3, column=0, columnspan=2, sticky="we")
+        self.entry.grid(row=5, column=0, columnspan=2, sticky="we")
         self.entry.config(textvariable=self.var, relief='flat')
         self.set(msg)
 
@@ -129,24 +130,31 @@ def main():
     window.title("Google Image Download")
     window.resizable(width=True, height=False)
 
-    keyword, counts =  StringVar(), StringVar()
+    input_url, input_dir, input_cnt =  StringVar(), StringVar(), StringVar()
     hide = BooleanVar() 
-    counts.set(DOWNLOAD_IMAGES)
+    input_cnt.set(DOWNLOAD_IMAGES)
     hide.set(True)
 
-    def btn_action():
-        word = keyword.get()
-        num  = int(counts.get())
-        path = os.path.join(DOWNLOAD_PATH, word)        
-        create_image_dir(path)
-        download_images(path, word, num, hide.get())
+    def btn_download():
+        url = input_url.get()
+        num = int(input_cnt.get())
+        dir = input_dir.get()
+        create_image_dir(dir)
+        download_images(dir, url, num, hide.get())
+
+    def btn_saveto():
+        dir = filedialog.askdirectory(parent = window, initialdir = ROOT_PATH, title='Download a directory')
+        if dir:
+            input_dir.set(dir)
 
     ttk.Label(window, text = "Keyword\t").grid(row = 0, column = 0, padx = 10, pady = 5)
-    ttk.Label(window, text = "Counts\t").grid(row = 1, column = 0, padx = 10, pady = 5)
-    ttk.Entry(window, textvariable = keyword).grid(row = 0, column = 1, padx = 10, pady = 5, ipadx=200)
-    ttk.Entry(window, textvariable = counts).grid(row = 1, column = 1, padx = 10, pady = 5)
-    ttk.Checkbutton(window, text='Hide browser', var=hide).grid(row = 2, column = 0, padx = 10, pady = 5)
-    ttk.Button(window, text="Find", command=btn_action).grid(row = 2, column = 1, padx = 10, pady = 10)  
+    ttk.Button(window, text="SAVE To\t", command=btn_saveto).grid(row = 1, column = 0, sticky=W)
+    ttk.Label(window, text = "Counts\t").grid(row = 2, column = 0, padx = 10, pady = 5)
+    ttk.Entry(window, textvariable = input_url).grid(row = 0, column = 1, padx = 10, pady = 5, ipadx=200)
+    ttk.Entry(window, textvariable = input_dir).grid(row = 1, column = 1, padx = 5, pady = 5, ipadx=200)
+    ttk.Entry(window, textvariable = input_cnt).grid(row = 2, column = 1, padx = 10, pady = 5)
+    ttk.Checkbutton(window, text='Hide browser', var=hide).grid(row = 3, column = 0, padx = 10, pady = 5)
+    ttk.Button(window, text="Find", command=btn_download).grid(row = 4, column = 1, padx = 10, pady = 10)
     statusBar.init(window, "Ready")    
 
     window.mainloop()
